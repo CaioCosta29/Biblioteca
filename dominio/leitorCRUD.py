@@ -45,5 +45,25 @@ class LeitorCRUD:
             return 'Leitor atualizado'
         else:
             return 'Leitor não encontrado. Impossivel atualizar!'
+        
+    def deletar_leitor(id_nome, id_telefone):
+        leitores = LeitorCRUD.visualizar_leitores()
+        print(id_nome, id_telefone)
+
+        for linha in leitores:
+            print(linha)
+            if f'{id_nome}, {id_telefone}' in f'{linha[0]}, {linha[1]}':
+                leitores.remove(linha)
+                LeitorCRUD.cadastrar_leitores(leitores)
+                return f'Leitor removido com sucesso'
+            
+            
+        return f'Este leitor não está cadastrado'
+
+            
+            
+
+
+        
             
             

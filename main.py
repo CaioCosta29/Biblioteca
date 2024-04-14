@@ -1,5 +1,12 @@
-from login.usuario import Usuario
-from leitores.leitorCRUD import LeitorCRUD
+import sys
+# sys.path.insert(1,'/dominio/')
+# sys.path.insert(1,'/persistencia/')
+
+from dominio.leitorCRUD import LeitorCRUD
+from dominio.livroCRUD import LivroCRUD
+from dominio.usuario import Usuario
+
+
 import os
 
 
@@ -75,14 +82,90 @@ Digite '4' para excluir um leitor''')
                             nome_atualizado = input('Digite o nome do leitor para atualizar: ')
                             telefone_atualizado = input('Digite o telefone para atualizar: ')
                             email_atualizado = input('Digite o email para atualizar: ')
+                            if os.path.exists('cadastro_leitor.txt'):
+                                txt = LeitorCRUD(nome_atualizado, telefone_atualizado, email_atualizado).atualizar_leitor(id_nome, id_telefone)
+                                os.system('cls')
+                                print(txt)
 
-                            txt = LeitorCRUD(nome_atualizado, telefone_atualizado, email_atualizado).atualizar_leitor(id_nome, id_telefone)
-                            os.system('cls')
-                            print(txt)
+                            else:
+                                os.system('cls')
+                                print('Não existe nenhum leitor cadastrado')
+                            
+                            
+
+                        case 4:
+                            nome_excluir = input('Digite o nome do leitor que deseja excluir: ').title()
+                            numero_excluir = input('Digite o numero do leitor: ')
+
+                            if os.path.exists('cadastro_leitor.txt'):
+                                txt = LeitorCRUD.deletar_leitor(nome_excluir, numero_excluir)
+                                print(txt)
+
+                            else:
+                                os.system('cls')
+                                print('Não existe nenhum leitor cadastrado')
                             
                 
                 case 2: # entrar na aba do livro
-                    pass
+                    print('''----------livros----------
+Digite '1' para cadastrar um livro
+Digite '2' para visualizar os livros
+Digite '3' para atualizar um livro
+Digite '4' para excluir um livro''')
+                    escolha_livro = int(input(''))
+                    match escolha_livro:
+                        case 1:
+                            titulo = input('Digite o titulo do livro: ')
+                            autor = input('Digite o autor do livro: ')
+                            genero = input('Digite o genero do livro: ')
+
+                            LivroCRUD(titulo, autor, genero).cadastrar_livro()
+                            os.system('cls')
+
+                        case 2:
+                            if os.path.exists('cadastro_livro.txt'):
+                                livros = LivroCRUD.visualizar_livros()
+                                for livro in livros:
+                                    print(f'Titulo: {livro[0].ljust(20)} | Autor: {livro[1].ljust(20)} | Gênero: {livro[2].ljust(20)}')
+
+                            else:
+                                print('Nenhum livro foi cadastrado')
+
+                            input('Aperte qualquer tecla para continuar')
+                            os.system('cls')
+
+                        
+                        case 3:
+                            id_titulo = input('Digite o titulo do livro que deseja modificar: ').title()
+                            id_autor = input(f'Digite o autor de {id_titulo}: ').title()
+
+                            titulo_atualizado = input('Digite o nome do titulo atualizado: ')
+                            autor_atualizado = input('Digite o nome do autor atualizado: ')
+                            genero_atualizado = input('Digite o gênero atualizado: ')
+
+                            if os.path.exists('cadastro_livro.txt'):
+                                txt = LivroCRUD(titulo_atualizado, autor_atualizado, genero_atualizado).atualizar_livro(id_titulo, id_autor)
+                                os.system('cls')
+                                print(txt)
+
+                            else:
+                                os.system('cls')
+                                print('Não existe nenhum livro cadastrado')
+
+                        case 4:
+                            titulo_excluir = input('Digite o nome do livro que deseja excluir: ')
+                            autor_excluir = input(f'Digite o nome do autor de {titulo_excluir}: ')
+
+                            if os.path.exists('cadastro_livro.txt'):
+                                
+                                pass
+
+                            else:
+                                print('Não existe nenhum livro cadastrado')
+
+
+                            pass
+                    
 
                 case 3: # cadastrar um novo login
                     username = input('Digite o nome do usuario: ')
