@@ -1,11 +1,6 @@
-import sys
-# sys.path.insert(1,'/dominio/')
-# sys.path.insert(1,'/persistencia/')
-
-from dominio.leitorCRUD import LeitorCRUD
-from dominio.livroCRUD import LivroCRUD
-from dominio.usuario import Usuario
-
+from persistencia.arquivo.leitorCRUDArquivo import LeitorCRUDArquivo as LeitorCRUD
+from persistencia.arquivo.livroCRUDArquivo import LivroCRUD as LivroCRUD
+from persistencia.arquivo.usuarioArquivo import Usuario
 
 import os
 

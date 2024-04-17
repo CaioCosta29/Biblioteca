@@ -1,4 +1,6 @@
-class LeitorCRUD:
+from dominio.leitorServico import LeitorServico
+
+class LeitorCRUDArquivo(LeitorServico):
     def __init__(self, nome, telefone, email):
         self.nome = nome.title()
         self.telefone = telefone
@@ -13,7 +15,7 @@ class LeitorCRUD:
             cad.write('')
 
         for leitor in leitores:
-            LeitorCRUD(leitor[0], leitor[1], leitor[2]).cadastrar_leitor()
+            LeitorCRUDArquivo(leitor[0], leitor[1], leitor[2]).cadastrar_leitor()
     
 
     def visualizar_leitores():
@@ -28,7 +30,7 @@ class LeitorCRUD:
         
 
     def atualizar_leitor(self, id_nome, id_telefone):
-        leitores = LeitorCRUD.visualizar_leitores()
+        leitores = LeitorCRUDArquivo.visualizar_leitores()
         status_encontrado = False
 
         for linha in leitores:
@@ -41,20 +43,20 @@ class LeitorCRUD:
                 break
 
         if status_encontrado == True:
-            LeitorCRUD.cadastrar_leitores(leitores)
+            LeitorCRUDArquivo.cadastrar_leitores(leitores)
             return 'Leitor atualizado'
         else:
             return 'Leitor não encontrado. Impossivel atualizar!'
         
     def deletar_leitor(id_nome, id_telefone):
-        leitores = LeitorCRUD.visualizar_leitores()
+        leitores = LeitorCRUDArquivo.visualizar_leitores()
         print(id_nome, id_telefone)
 
         for linha in leitores:
             print(linha)
             if f'{id_nome}, {id_telefone}' in f'{linha[0]}, {linha[1]}':
                 leitores.remove(linha)
-                LeitorCRUD.cadastrar_leitores(leitores)
+                LeitorCRUDArquivo.cadastrar_leitores(leitores)
                 return f'Leitor removido com sucesso'
             
             
