@@ -1,4 +1,4 @@
-from dominio.emprestioServico import EmprestimoServico
+from dominio.emprestimoServico import EmprestimoServico
 from persistencia.arquivo.leitorCRUDArquivo import LeitorCRUDArquivo as LeitorCRUD
 from persistencia.arquivo.livroCRUDArquivo import LivroCRUDArquivo as LivroCRUD
 
@@ -53,12 +53,23 @@ class EmprestimoCRUDArquivo(EmprestimoServico):
     
     def devolver_livro(titulo, autor, nome_cliente):
         emprestimos = EmprestimoCRUDArquivo.visualizar_emprestimos()
+        if len(emprestimos) > 0:
+            for emprestimo in emprestimos:
+                if f'{titulo}, {autor}, {nome_cliente}' in f'{emprestimo[0]}, {emprestimo[1]}, {emprestimo[2]}':
+                    emprestimos.remove(emprestimo)
 
-        for emprestimo in emprestimos:
-            if f'{titulo}, {autor}, {nome_cliente}' in f'{emprestimo[0]}, {emprestimo[1]}, {emprestimo[2]}':
-                emprestimos.remove(emprestimo)
+                    EmprestimoCRUDArquivo.cadastrar_emprestimos(emprestimos)
+                    return 'Livro devolvido'
 
-                EmprestimoCRUDArquivo.cadastrar_emprestimos(emprestimos)
+                
+            
+                else:
+                    return 'Esse emprestimo não foi feito'
+                
+        else:
+            return 'Nenhum emprestimo foi cadastrado'
+            
+
                 
             
         

@@ -5,6 +5,7 @@ from persistencia.arquivo.emprestimoCRUDArquivo import EmprestimoCRUDArquivo as 
 
 import os
 
+# Sistema para bibliotecas, aonde pode se cadastrar, modificar, visualizar e excluir leitores e livros, além de poder emprestar livros
 
 def menu():
     print('''--------Menu--------
@@ -200,6 +201,9 @@ Digite '3' para visualizar livros emprestados''')
                             nome_leitor_devolver = input('Digite o nome do leitor: ').title()
 
                             txt = EmprestimoCRUD.devolver_livro(titulo_devolver, autor_devolver, nome_leitor_devolver)
+                            os.system('cls')
+                            print(txt)
+                            
 
                         case 3:
                             if os.path.exists('cadastro_emprestimo.txt'):
@@ -211,7 +215,7 @@ Digite '3' para visualizar livros emprestados''')
                                         print(f'Titulo: {emprestimo[0].ljust(25)} | Autor: {emprestimo[1].ljust(25)} | Nome do Leitor: {emprestimo[2].ljust(25)}')
                                 
                                 else:
-                                    print('Não existe nehum emprestimo')
+                                    print('Não existe nenhum emprestimo')
 
                             else:
                                 print('Não existe nenhum emprestimo')
