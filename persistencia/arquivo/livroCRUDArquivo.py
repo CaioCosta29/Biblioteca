@@ -1,4 +1,6 @@
-class LivroCRUD:
+from dominio.livroServico import LivroServico
+
+class LivroCRUDArquivo(LivroServico):
     def __init__(self, titulo, autor, genero):
         self.titulo = titulo.title()
         self.autor = autor.title()
@@ -13,7 +15,7 @@ class LivroCRUD:
             cad.write('')
 
         for livro in livros:
-            LivroCRUD(livro[0], livro[1], livro[2]).cadastrar_livro()
+            LivroCRUDArquivo(livro[0], livro[1], livro[2]).cadastrar_livro()
 
 
     def visualizar_livros():
@@ -27,7 +29,7 @@ class LivroCRUD:
             return lista
         
     def atualizar_livro(self, id_titulo, id_autor):
-        livros = LivroCRUD.visualizar_livros()
+        livros = LivroCRUDArquivo.visualizar_livros()
         status_encontrado = False
 
         for linha in livros:
@@ -38,13 +40,24 @@ class LivroCRUD:
                 linha[2] = self.genero
 
         if status_encontrado == True:
-            LivroCRUD.cadastrar_livros(livros)
+            LivroCRUDArquivo.cadastrar_livros(livros)
             return 'Livro atualizado'
         else:
             return 'Livro não encontrado. Impossivel atualizar!'
         
-    def excluir_livro():
-        pass
+    def excluir_livro(id_titulo, id_autor):
+        livros = LivroCRUDArquivo.visualizar_livros()
+
+        for livro in livros:
+            if f'{id_titulo}, {id_autor}' in f'{livro[0]}, {livro[1]}':
+                livros.remove(livro)
+                LivroCRUDArquivo.cadastrar_livros(livros)
+                return f'Livro removido com sucesso'
+            
+        return f'Este livro não esta cadastrado'
+            
+           
+        
         
 
 

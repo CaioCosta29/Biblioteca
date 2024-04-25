@@ -50,10 +50,9 @@ class LeitorCRUDArquivo(LeitorServico):
         
     def deletar_leitor(id_nome, id_telefone):
         leitores = LeitorCRUDArquivo.visualizar_leitores()
-        print(id_nome, id_telefone)
+        
 
         for linha in leitores:
-            print(linha)
             if f'{id_nome}, {id_telefone}' in f'{linha[0]}, {linha[1]}':
                 leitores.remove(linha)
                 LeitorCRUDArquivo.cadastrar_leitores(leitores)

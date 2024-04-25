@@ -1,4 +1,6 @@
-class Usuario:
+from dominio.usuarioServico import UsuarioServico
+
+class UsuarioArquivo(UsuarioServico):
     
     def cadastrar_usuario(self, usuario, senha):
         with open('cadastro_usuario.txt', 'a') as cad:

@@ -1,6 +1,7 @@
 from persistencia.arquivo.leitorCRUDArquivo import LeitorCRUDArquivo as LeitorCRUD
-from persistencia.arquivo.livroCRUDArquivo import LivroCRUD as LivroCRUD
-from persistencia.arquivo.usuarioArquivo import Usuario
+from persistencia.arquivo.livroCRUDArquivo import LivroCRUDArquivo as LivroCRUD
+from persistencia.arquivo.usuarioArquivo import UsuarioArquivo as Usuario
+from persistencia.arquivo.emprestimoCRUDArquivo import EmprestimoCRUDArquivo as EmprestimoCRUD
 
 import os
 
@@ -10,7 +11,8 @@ def menu():
 Digite '1' para entrar na aba de leitor
 Digite '2' para entrar na aba de livro
 Digite '3' para cadastrar um novo login
-Digite '4' para encerrar o programa''')
+Digite '4' para entrar na aba de emprestimo
+Digite '5' para encerrar o programa''')
     
 
 
@@ -94,6 +96,7 @@ Digite '4' para excluir um leitor''')
 
                             if os.path.exists('cadastro_leitor.txt'):
                                 txt = LeitorCRUD.deletar_leitor(nome_excluir, numero_excluir)
+                                os.system('cls')
                                 print(txt)
 
                             else:
@@ -102,6 +105,7 @@ Digite '4' para excluir um leitor''')
                             
                 
                 case 2: # entrar na aba do livro
+                    os.system('cls')
                     print('''----------livros----------
 Digite '1' para cadastrar um livro
 Digite '2' para visualizar os livros
@@ -148,21 +152,25 @@ Digite '4' para excluir um livro''')
                                 print('Não existe nenhum livro cadastrado')
 
                         case 4:
-                            titulo_excluir = input('Digite o nome do livro que deseja excluir: ')
-                            autor_excluir = input(f'Digite o nome do autor de {titulo_excluir}: ')
+                            titulo_excluir = input('Digite o nome do livro que deseja excluir: ').title()
+                            autor_excluir = input(f'Digite o nome do autor de {titulo_excluir}: ').title()
 
                             if os.path.exists('cadastro_livro.txt'):
                                 
-                                pass
+                                txt = LivroCRUD.excluir_livro(titulo_excluir, autor_excluir)
+                                os.system('cls')
+                                print(txt)
 
                             else:
+                                os.system('cls')
                                 print('Não existe nenhum livro cadastrado')
 
 
-                            pass
+                            
                     
 
                 case 3: # cadastrar um novo login
+                    os.system('cls')
                     username = input('Digite o nome do usuario: ')
                     senha = input('Digite sua senha: ')
                     os.system('cls')
@@ -170,8 +178,51 @@ Digite '4' para excluir um livro''')
                     controle_usuario.cadastrar_usuario(username, senha)
                 
 
-                case 4:
+                case 4: # entrar na aba emprestimo
+                    os.system('cls')
+                    print('''----------Emprestimo----------
+Digite '1' para emprestar um livro
+Digite '2' para devolver um livro
+Digite '3' para visualizar livros emprestados''')
+                    emprestimo_escolha = int(input())
+                    match emprestimo_escolha:
+                        case 1:
+                            titulo_emprestimo = input('Digite o titulo do livro: ').title()
+                            autor_emprestimo = input('Digite o autor do livro: ').title()
+                            nome_leitor_emprestimo = input('Digite o nome do leitor: ').title()
+
+                            txt = EmprestimoCRUD.emprestar_livro(titulo_emprestimo, autor_emprestimo, nome_leitor_emprestimo)
+                            print(txt)
+
+                        case 2:
+                            titulo_devolver = input('Digite o titulo do livro: ').title()
+                            autor_devolver = input('Digite o autor do livro: ').title()
+                            nome_leitor_devolver = input('Digite o nome do leitor: ').title()
+
+                            txt = EmprestimoCRUD.devolver_livro(titulo_devolver, autor_devolver, nome_leitor_devolver)
+
+                        case 3:
+                            if os.path.exists('cadastro_emprestimo.txt'):
+                                emprestimos = EmprestimoCRUD.visualizar_emprestimos()
+                                if len(emprestimos) > 0:
+
+                                    os.system('cls')
+                                    for emprestimo in emprestimos:
+                                        print(f'Titulo: {emprestimo[0].ljust(25)} | Autor: {emprestimo[1].ljust(25)} | Nome do Leitor: {emprestimo[2].ljust(25)}')
+                                
+                                else:
+                                    print('Não existe nehum emprestimo')
+
+                            else:
+                                print('Não existe nenhum emprestimo')
+
+                            input('\nAperte qualquer tecla para continuar')
+                            os.system('cls')
+                    
+
+                case 5:
                     break
+                    
 
         except ValueError:
             os.system('cls')
