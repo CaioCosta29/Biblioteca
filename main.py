@@ -61,14 +61,15 @@ Digite '4' para excluir um leitor''')
                             os.system('cls')
 
                         case 2:
-                            if os.path.exists('cadastro_leitor.txt'):
                                 
-                                leitores = LeitorCRUD.visualizar_leitores()
+                            leitores = LeitorCRUD.visualizar_leitores()
+                            if len(leitores) > 0:
                                 for leitor in leitores:
                                     print(f'Nome: {leitor[0].ljust(20)} | Telefone: {leitor[1].ljust(20)} | Email: {leitor[2].ljust(20)}')
 
                             else:
-                                print('\nNão existe nenhum leitor cadastrado')
+                                os.system('cls')
+                                print('Não nenhum leitor cadastrado')
                             
                             input('Aperte qualquer tecla para continuar')
                             os.system('cls')
@@ -95,14 +96,10 @@ Digite '4' para excluir um leitor''')
                             nome_excluir = input('Digite o nome do leitor que deseja excluir: ').title()
                             numero_excluir = input('Digite o numero do leitor: ')
 
-                            if os.path.exists('cadastro_leitor.txt'):
-                                txt = LeitorCRUD.deletar_leitor(nome_excluir, numero_excluir)
-                                os.system('cls')
-                                print(txt)
-
-                            else:
-                                os.system('cls')
-                                print('Não existe nenhum leitor cadastrado')
+                            
+                            txt = LeitorCRUD.deletar_leitor(nome_excluir, numero_excluir)
+                            os.system('cls')
+                            print(txt)
                             
                 
                 case 2: # entrar na aba do livro
@@ -118,18 +115,20 @@ Digite '4' para excluir um livro''')
                             titulo = input('Digite o titulo do livro: ')
                             autor = input('Digite o autor do livro: ')
                             genero = input('Digite o genero do livro: ')
+                            # estoque = int(input('Quantos livros deseja adicionar no estoque')) adicionar estoque para o bd
 
                             LivroCRUD(titulo, autor, genero).cadastrar_livro()
                             os.system('cls')
 
                         case 2:
-                            if os.path.exists('cadastro_livro.txt'):
-                                livros = LivroCRUD.visualizar_livros()
+                            livros = LivroCRUD.visualizar_livros()
+                            if len(livros) > 0:
                                 for livro in livros:
                                     print(f'Titulo: {livro[0].ljust(20)} | Autor: {livro[1].ljust(20)} | Gênero: {livro[2].ljust(20)}')
 
                             else:
-                                print('Nenhum livro foi cadastrado')
+                                os.system('cls')
+                                print('Não existe nenhum livro cadastrado')
 
                             input('Aperte qualquer tecla para continuar')
                             os.system('cls')
@@ -143,32 +142,24 @@ Digite '4' para excluir um livro''')
                             autor_atualizado = input('Digite o nome do autor atualizado: ')
                             genero_atualizado = input('Digite o gênero atualizado: ')
 
-                            if os.path.exists('cadastro_livro.txt'):
-                                txt = LivroCRUD(titulo_atualizado, autor_atualizado, genero_atualizado).atualizar_livro(id_titulo, id_autor)
-                                os.system('cls')
-                                print(txt)
+                            
+                            txt = LivroCRUD(titulo_atualizado, autor_atualizado, genero_atualizado).atualizar_livro(id_titulo, id_autor)
+                            os.system('cls')
+                            print(txt)
 
-                            else:
-                                os.system('cls')
-                                print('Não existe nenhum livro cadastrado')
+                            
 
                         case 4:
                             titulo_excluir = input('Digite o nome do livro que deseja excluir: ').title()
                             autor_excluir = input(f'Digite o nome do autor de {titulo_excluir}: ').title()
 
-                            if os.path.exists('cadastro_livro.txt'):
+                            
                                 
-                                txt = LivroCRUD.excluir_livro(titulo_excluir, autor_excluir)
-                                os.system('cls')
-                                print(txt)
-
-                            else:
-                                os.system('cls')
-                                print('Não existe nenhum livro cadastrado')
-
+                            txt = LivroCRUD.excluir_livro(titulo_excluir, autor_excluir)
+                            os.system('cls')
+                            print(txt)
 
                             
-                    
 
                 case 3: # cadastrar um novo login
                     os.system('cls')
@@ -206,19 +197,18 @@ Digite '3' para visualizar livros emprestados''')
                             
 
                         case 3:
-                            if os.path.exists('cadastro_emprestimo.txt'):
-                                emprestimos = EmprestimoCRUD.visualizar_emprestimos()
-                                if len(emprestimos) > 0:
+                            
+                            emprestimos = EmprestimoCRUD.visualizar_emprestimos()
+                            if len(emprestimos) > 0:
 
-                                    os.system('cls')
-                                    for emprestimo in emprestimos:
-                                        print(f'Titulo: {emprestimo[0].ljust(25)} | Autor: {emprestimo[1].ljust(25)} | Nome do Leitor: {emprestimo[2].ljust(25)}')
+                                os.system('cls')
+                                for emprestimo in emprestimos:
+                                    print(f'Titulo: {emprestimo[0].ljust(25)} | Autor: {emprestimo[1].ljust(25)} | Nome do Leitor: {emprestimo[2].ljust(25)}')
                                 
                                 else:
                                     print('Não existe nenhum emprestimo')
 
-                            else:
-                                print('Não existe nenhum emprestimo')
+                            
 
                             input('\nAperte qualquer tecla para continuar')
                             os.system('cls')

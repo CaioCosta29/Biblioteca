@@ -1,4 +1,5 @@
 from dominio.livroServico import LivroServico
+import os
 
 class LivroCRUDArquivo(LivroServico):
     def __init__(self, titulo, autor, genero):
@@ -26,7 +27,7 @@ class LivroCRUDArquivo(LivroServico):
             for livro in livros:
                 lista.append(livro.split('&&')) 
 
-            return lista
+            return lista 
         
     def atualizar_livro(self, id_titulo, id_autor):
         livros = LivroCRUDArquivo.visualizar_livros()
