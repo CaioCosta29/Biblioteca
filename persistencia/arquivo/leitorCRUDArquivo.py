@@ -1,6 +1,6 @@
-from dominio.leitorServico import LeitorServico
+from dominio.leitorRepositorio import LeitorRepositorio
 
-class LeitorCRUDArquivo(LeitorServico):
+class LeitorCRUDArquivo(LeitorRepositorio):
     def __init__(self, nome, telefone, email):
         self.nome = nome.title()
         self.telefone = telefone

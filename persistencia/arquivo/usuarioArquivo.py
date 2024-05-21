@@ -19,8 +19,6 @@ class UsuarioArquivo(UsuarioServico):
     def autenticar_usuario(self, usuario, senha):
         usuarios = self.visualizar_usuarios()
         
-    
-        
         for linha in usuarios:
             if f'{linha[0]}' == usuario and f'{linha[1]}' == senha:
                 return 'Logado com sucesso', True

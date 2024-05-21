@@ -1,15 +1,14 @@
-from dominio.leitorServico import LeitorServico
+from dominio.leitorVO import LeitorVO
 
-class LeitorCRUDBanco(LeitorServico):
-    def __init__(self, nome, telefone, email):
-        self.nome = nome.title()
-        self.telefone = telefone
-        self.email = email
+class LeitorRepositorio:
 
-    def cadastrar_leitor(self):
+    def cadastrar_leitor(leitorVO):
         raise NotImplementedError()
 
     def cadastrar_leitores(leitores):
+        raise NotImplementedError()
+
+    def consultar_leitor(cpf):
         raise NotImplementedError()
 
     def visualizar_leitores():
