@@ -1,7 +1,7 @@
-from dominio.livroServico import LivroServico
+
 import os
 
-class LivroCRUDArquivo(LivroServico):
+class LivroCRUDArquivo:
     def __init__(self, titulo, autor, genero):
         self.titulo = titulo.title()
         self.autor = autor.title()

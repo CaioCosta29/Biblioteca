@@ -1,8 +1,7 @@
-from dominio.emprestimoServico import EmprestimoServico
 from persistencia.arquivo.leitorCRUDArquivo import LeitorCRUDArquivo as LeitorCRUD
 from persistencia.arquivo.livroCRUDArquivo import LivroCRUDArquivo as LivroCRUD
 
-class EmprestimoCRUDArquivo(EmprestimoServico):
+class EmprestimoCRUDArquivo:
     # def __init__(self):
     #     self.livro_controle = LivroCRUD()
     #     self.leitor_controle = LeitorCRUD()

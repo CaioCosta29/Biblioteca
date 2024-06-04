@@ -22,8 +22,11 @@ class LeitorRepositorioBanco(LeitorRepositorio):
         self.cursor.execute(sql, valores)
 
         leitor = self.cursor.fetchone()
+        
+        if leitor:
+            leitor_VO = LeitorVO(leitor[1], leitor[2], leitor[3], leitor[4], leitor[0])
 
-        return leitor
+            return leitor_VO
 
     def verificar_leitor_existe(self, cpf):
         leitor = self.consultar_leitor(cpf)

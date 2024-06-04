@@ -10,7 +10,6 @@ class LeitorServicoImpl:
         self.leitor_repositorio_banco = LeitorRepositorioBanco(self.cursor)
 
     def cadastrar_leitor(self, leitor_VO):
-
         self.validar_dados(leitor_VO)
 
         leitor_existe = self.leitor_repositorio_banco.verificar_leitor_existe(leitor_VO.cpf)
@@ -22,7 +21,7 @@ class LeitorServicoImpl:
         else:
             self.banco.realizarRollback()
             self.banco.fecharConexao()
-            raise Exception('Leitor já cadastrado.')
+            raise ValueError('Leitor já cadastrado.')
 
     def obter_leitores(self):
         leitores = self.leitor_repositorio_banco.obter_leitores()
@@ -30,7 +29,12 @@ class LeitorServicoImpl:
         return leitores
     
     def consultar_leitor(self, cpf):
-        leitor = self.leitor_repositorio_banco.verificar_leitor_existe(cpf)
+        leitor_existe = self.leitor_repositorio_banco.verificar_leitor_existe(cpf)
+
+        if leitor_existe == False:
+            raise ValueError('Leitor não existe.')
+        else: 
+            leitor = self.leitor_repositorio_banco.consultar_leitor(cpf)
 
         return leitor
 
@@ -48,7 +52,7 @@ class LeitorServicoImpl:
         else:
             self.banco.realizarCommit()
             self.banco.fecharConexao()
-            raise Exception('Esse leitor não existe')
+            raise ValueError('Esse leitor não existe')
 
     
     def deletar_leitor(self, cpf):
@@ -64,9 +68,9 @@ class LeitorServicoImpl:
         else:
             self.banco.realizarRollback()
             self.banco.fecharConexao()
-            raise Exception('CPF não existe')
+            raise ValueError('CPF não existe')
         
-    def validar_dados(leitor_VO):
+    def validar_dados(self, leitor_VO):
          
         if len(leitor_VO.cpf) != 11:
             raise ValueError('CPF inválido.')

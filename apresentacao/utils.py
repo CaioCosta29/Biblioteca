@@ -5,4 +5,5 @@ def get_single_char():
     return char.decode('utf-8')
 
 def pausar():
+    print('Tecle qualquer coisa para continuar')
     get_single_char()

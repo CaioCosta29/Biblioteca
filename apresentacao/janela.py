@@ -1,10 +1,14 @@
 from dominio.leitorVO import LeitorVO
 from dominio.usuarioVO import UsuarioVO
 from dominio.livroVO import LivroVO
+from dominio.emprestimoVO import emprestimoVO
+from dominio.estoqueVO import EstoqueVO
 
 from dominio.impl.leitorServiceImpl import LeitorServicoImpl
 from dominio.impl.usuarioServiceImpl import UsuarioServicoImpl
 from dominio.impl.livroServiceImpl import LivroServiceImpl
+from dominio.impl.emprestimoServiceImpl import EmprestimoServiceImpl
+from dominio.impl.estoqueServiceImpl import EstoqueServiceImpl
 
 from persistencia.arquivo.leitorCRUDArquivo import LeitorCRUDArquivo as LeitorCRUD
 from persistencia.arquivo.livroCRUDArquivo import LivroCRUDArquivo as LivroCRUD
@@ -24,7 +28,6 @@ def exibir_tela_login():
         print('*** Sistema de Controle de Biblioteca ***\n\n')
 
         print('Faça o login')
-        print('teste')
 
         username = input('Digite seu usuario: ')
         senha = getpass.getpass('Digite sua senha: ')
@@ -32,15 +35,15 @@ def exibir_tela_login():
         usuario_VO = UsuarioVO(username, senha)
 
         try:
-            teste = UsuarioServicoImpl()
-            verificacao_login = teste.autenticar_usuario(usuario_VO)
+            usuario_service = UsuarioServicoImpl()
+            verificacao_login = usuario_service.autenticar_usuario(usuario_VO)
             if verificacao_login == True:
                 exibir_tela_principal()
             else:
                 print('\n')
                 print('Senha ou usuario invalidos!')
 
-                input('Digite qualquer coisa para continuar')
+                pausar()
                 os.system('cls')
                 continue
         except ValueError as ex:
@@ -64,7 +67,7 @@ Digite '1' para entrar na aba de leitor
 Digite '2' para entrar na aba de livro
 Digite '3' para cadastrar um novo login
 Digite '4' para entrar na aba de emprestimo
-Digite '5' para encerrar o programa''')
+Digite '0' para encerrar o programa''')
         
         try:
             while True:
@@ -89,7 +92,7 @@ Digite '5' para encerrar o programa''')
             case 4:
                 exibir_tela_emprestimo()
 
-            case 5:
+            case 0:
                 os.system('cls')
                 exit('Obrigado por usar o sistema!')
     
@@ -103,7 +106,7 @@ Digite '1' para cadastrar um leitor
 Digite '2' para visualizar leitores
 Digite '3' para editar um leitor
 Digite '4' para excluir um leitor
-Digite '5' para voltar ao menu principal''')
+Digite '0' para voltar ao menu principal''')
         try:
             while True:
                 char = get_single_char()
@@ -111,36 +114,37 @@ Digite '5' para voltar ao menu principal''')
                     escolha_do_usuario = int(char)
                     break
         except ValueError as ex:
-            print(xe)
+            print(ex)
             continue
 
+        print('')
         match escolha_do_usuario:
             case 1:
-                cpf_leitor = input('\nDigite o CPF do leitor: ')
+                cpf_leitor = input('Digite o CPF do leitor: ')
                 nome_leitor = input('Digite o nome do leitor: ')
                 telefone_leitor = input('Digite o telefone: ')
                 email_leitor = input('Digite o email: ')
 
                 leitorVO = LeitorVO(cpf_leitor, nome_leitor, telefone_leitor, email_leitor)
                 
+                print('')
                 try: 
                     servico_leitor = LeitorServicoImpl()
                     servico_leitor.cadastrar_leitor(leitorVO)
-                    print("\nCadastrado com sucesso!")
-                    pausar()
+                    print("Cadastrado com sucesso!")
+        
                 except ValueError as erro_de_atributo:
                     print(str(erro_de_atributo))
-                    pausar()
                 
                 except Exception as xe:
-                    print(f'\nErro não indetificado: {str(xe)}')
+                    print(f'Erro não indetificado: {str(xe)}')
                     print(xe)
-                    pausar()
                     
+                pausar()
             case 2:
                 servico_leitor = LeitorServicoImpl()
                 leitores = servico_leitor.obter_leitores()
-                
+
                 if leitores:
                     for leitor in leitores:
                         print(f'CPF: {leitor.cpf.ljust(20)} | Nome: {leitor.nome.ljust(20)} | Telefone: {leitor.telefone.ljust(20)} | Email: {leitor.email.ljust(20)}')
@@ -148,24 +152,23 @@ Digite '5' para voltar ao menu principal''')
                     os.system('cls')
                     print('Não nenhum leitor cadastrado')
                 
-                input('Aperte qualquer tecla para continuar')
+                print('')
+                pausar()
                 os.system('cls')
 
             case 3:
-                cpf_atualizar = input('\nDigite o CPF do leitor que deseja atualizar: ')
-                
-                
-                nome_atualizar = input('\nDigite o nome: ')
+                cpf_atualizar = input('Digite o CPF do leitor que deseja atualizar: ')
+                nome_atualizar = input('Digite o nome: ')
                 telefone_atualizar = input('Digite o telefone: ')
                 email_atualizar = input('Digite o email: ')
 
-                leitor_VO = leitorVO(cpf_atualizar, nome_atualizar, telefone_atualizar, email_atualizar)
+                leitor_VO = LeitorVO(cpf_atualizar, nome_atualizar, telefone_atualizar, email_atualizar)
 
+                print('')
                 try:
                     servico_leitor = LeitorServicoImpl()
                     servico_leitor.atualizar_leitor(leitor_VO)
-                    print('\nAtualizado com sucesso')
-                    pausar()
+                    print('Atualizado com sucesso')
 
                 except ValueError as ex:
                     print(ex)
@@ -173,21 +176,25 @@ Digite '5' para voltar ao menu principal''')
                 except Exception as xe:
                     print(xe)
 
+                pausar()
+
             case 4:
-                cpf_excluir = input('\nDigite o CPF do leitor que deseja excluir: ')
+                cpf_excluir = input('Digite o CPF do leitor que deseja excluir: ')
                 
+                print('')
                 try:
                     servico_leitor = LeitorServicoImpl()
                     servico_leitor.deletar_leitor(cpf_excluir)
-                    print('\nLeitor excluído com sucesso')
-                    pausar()
+
+                    print('Leitor excluído com sucesso')
+
                 except ValueError as ex:
-                    print(f'\n{ex}')
+                    print(f'{ex}')
                 
                 pausar()
                 os.system('cls')
                 
-            case 5:
+            case 0:
                 os.system('cls')
                 break
     
@@ -201,7 +208,8 @@ Digite '1' para cadastrar um livro
 Digite '2' para visualizar os livros
 Digite '3' para atualizar um livro
 Digite '4' para excluir um livro
-Digite '5' para voltar ao menu principal''')
+Digite '5' para alterar o estoque
+Digite '0' para voltar ao menu principal''')
     
         while True:
                 char = get_single_char()
@@ -209,6 +217,7 @@ Digite '5' para voltar ao menu principal''')
                     escolha_do_usuario = int(char)
                     break
 
+        print('')
         match escolha_do_usuario:
             case 1:
                 isbn = input('Digite o ISBN do livro: ')
@@ -218,18 +227,20 @@ Digite '5' para voltar ao menu principal''')
                 # estoque = int(input('Quantos livros deseja adicionar no estoque'))
 
                 livro_VO = LivroVO(isbn, titulo, autor, genero)
-                
+                print('')
+
                 try:
                     servico_livro = LivroServiceImpl()
                     servico_livro.cadastrar_livro(livro_VO)
-                    print('\nCadastrado com sucesso')
-                    pausar()
+                    print('Cadastrado com sucesso')
+                    
                 except ValueError as erro:
                     print(erro)
-                    pausar()
+
                 except Exception as erro:
                     print(erro)
-                    pausar()
+                
+                pausar()
 
             case 2:
                 servico_livro = LivroServiceImpl()
@@ -237,12 +248,13 @@ Digite '5' para voltar ao menu principal''')
 
                 if livros:
                     for livro in livros:
-                        print(f'ISBN: {livro.isbn.ljust(25)} | Titulo: {livro.titulo.ljust(25)} | Autor: {livro.autor.ljust(25)} | Gênero: {livro.genero.ljust(20)}')
+                        print(f'ISBN: {livro.isbn.ljust(15)} | Titulo: {livro.titulo.ljust(25)} | Autor: {livro.autor.ljust(25)} | Gênero: {livro.genero.ljust(20)} | Estoque: {str(livro.quantidade).ljust(15)}')
                 else:
                     os.system('cls')
                     print('Não existe nenhum livro cadastrado')
 
-                input('Aperte qualquer tecla para continuar')
+                print('')
+                pausar()
                 os.system('cls')
 
             case 3:
@@ -253,45 +265,73 @@ Digite '5' para voltar ao menu principal''')
                 
                 livro_VO = LivroVO(isbn_atualizar, titulo_atualizar, autor_atualizar, genero_atualizar)
 
+                print('')
                 try:
                     servico_livro = LivroServiceImpl()
                     servico_livro.atualizar_livro(livro_VO)
                     print('Livro atualizado')
-                    pausar()
+
                 except ValueError as erro:
                     print(erro)
+
                 except Exception as erro:
                     print(erro)
 
+                pausar()
                 os.system('cls')
                 
 
             case 4:
                 isbn_excluir = input('Digite o ISBN do livro: ')
 
+                print('')
                 try:
                     servico_livro = LivroServiceImpl()
                     servico_livro.deletar_livro(isbn_excluir)
+                    
                     print('Livro removido')
-                    pausar()
 
                 except ValueError as erro:
                     print(erro)
+
                 except Exception as erro:
                     print(erro)
                 
+                pausar()
+            
             case 5:
+                exibir_tela_estoque()
+
+            case 0:
                 os.system('cls')
                 break
   
 def exibir_tela_cadastro_usuario():
-    os.system('cls')
-    username = input('Digite o nome do usuario: ')
-    senha = input('Digite sua senha: ')
-    os.system('cls')
+    
+    while True:
+        os.system('cls')
 
-    controle_usuario = Usuario()
-    controle_usuario.cadastrar_usuario(username, senha)
+        username = input('Digite o nome do usuario: ')
+        senha = input('Digite sua senha: ')
+
+        usuario_VO = UsuarioVO(username, senha)
+
+        print('')
+        try:
+            usuario_service = UsuarioServicoImpl()
+            usuario_service.cadastrar_usuario(usuario_VO)
+            
+            print('Usuario cadastrado com sucesso')
+
+        except ValueError as erro:
+            print(erro)
+
+        except Exception as xe:
+            print(f'Erro não indetificado {xe}')
+
+        print('')
+        pausar()
+        break
 
 def exibir_tela_emprestimo():
 
@@ -302,7 +342,7 @@ def exibir_tela_emprestimo():
 Digite '1' para emprestar um livro
 Digite '2' para devolver um livro
 Digite '3' para visualizar livros emprestados
-Digite '4' para voltar ao menu principal''')
+Digite '0' para voltar ao menu principal''')
     
         while True:
                 char = get_single_char()
@@ -310,41 +350,186 @@ Digite '4' para voltar ao menu principal''')
                     escolha_do_usuario = int(char)
                     break
 
+        print('')
         match escolha_do_usuario:
             case 1:
-                titulo_emprestimo = input('Digite o titulo do livro: ').title()
-                autor_emprestimo = input('Digite o autor do livro: ').title()
-                nome_leitor_emprestimo = input('Digite o nome do leitor: ').title()
+                isbn_livro = input('Digite o ISBN do livro: ')
+                cpf_leitor = input('Digite o CPF do leitor: ')
 
-                txt = EmprestimoCRUD.emprestar_livro(titulo_emprestimo, autor_emprestimo, nome_leitor_emprestimo)
-                print(txt)
+                print('')
+
+                try:
+                    servico_livro = LivroServiceImpl()
+                    livro_VO = servico_livro.consultar_livro(isbn_livro)
+                    print(f'Titulo: {livro_VO.titulo}')
+
+                    servico_leitor = LeitorServicoImpl()
+                    leitor_VO = servico_leitor.consultar_leitor(cpf_leitor)
+                    print(f'Nome: {leitor_VO.nome}')
+
+                    print('')
+
+                    total_dias = input('Informe o total de dias (Maximo de 15 dias): ')
+
+                    print('')
+
+                    confirmar = input("Digite 's' para confirmar o emprestimo e 'n' para cancelar: ")
+
+                    print('')
+
+                    if confirmar.lower() == 's':
+                        emprestimo_VO = emprestimoVO(livro_VO, leitor_VO, total_dias)
+
+                        emprestimo_service = EmprestimoServiceImpl()
+                        emprestimo_service.realizar_emprestimo(emprestimo_VO)
+
+                        print('Livro emprestado com sucesso')
+
+                    else:
+                        continue
+
+
+                except ValueError as erro:
+                    print(erro)
+
+                except Exception as erro:
+                    print(f'Erro não identificado {erro}')
+
+                print('')   
+                pausar()
 
             case 2:
-                titulo_devolver = input('Digite o titulo do livro: ').title()
-                autor_devolver = input('Digite o autor do livro: ').title()
-                nome_leitor_devolver = input('Digite o nome do leitor: ').title()
 
-                txt = EmprestimoCRUD.devolver_livro(titulo_devolver, autor_devolver, nome_leitor_devolver)
-                os.system('cls')
-                print(txt)
+                isbn_livro = input('Digite o ISBN do livro: ')
+                cpf_leitor = input('Digite o CPF do leitor: ')
+
+                print('')
+                try:
+                    servico_livro = LivroServiceImpl()
+                    livro_VO = servico_livro.consultar_livro(isbn_livro)
+                    print(f'Titulo: {livro_VO.titulo}')
+
+                    servico_leitor = LeitorServicoImpl()
+                    leitor_VO = servico_leitor.consultar_leitor(cpf_leitor)
+                    print(f'Nome: {leitor_VO.nome}')
+
+                    print('')
+
+                    confirmar = input("Digite 's' para confirmar o emprestimo e 'n' para cancelar: ")
+
+                    print('')
+
+                    if confirmar.lower() == 's':
+                        emprestimo_service = EmprestimoServiceImpl()
+                        emprestimo_service.devolver_livro(livro_VO, leitor_VO)
+
+                        print('Livro devolvido com sucesso')
+
+                except ValueError as erro:
+                    print(erro)
+
+                except Exception as erro:
+                    print(f'Erro não identificado {erro}')
+
+                print('')
+                pausar()
                 
             case 3:
-                emprestimos = EmprestimoCRUD.visualizar_emprestimos()
-
-                if len(emprestimos) > 0:
-                    os.system('cls')
+                emprestimo_service = EmprestimoServiceImpl()
+                emprestimos = emprestimo_service.obter_leitores()
+                
+                if emprestimos:
                     for emprestimo in emprestimos:
-                        print(f'Titulo: {emprestimo[0].ljust(25)} | Autor: {emprestimo[1].ljust(25)} | Nome do Leitor: {emprestimo[2].ljust(25)}')
-                    
+                        print(f'Nome: {emprestimo[0].ljust(25)} | Titulo: {emprestimo[1].ljust(25)} | Data do emprestimo: {str(emprestimo[2]).ljust(25)} | Data retorno: {str(emprestimo[3]).ljust(25)}')
+
                 else:
-                    print('Não existe nenhum emprestimo')
+                    print('Não existe livros emprestados')
 
-                input('\nAperte qualquer tecla para continuar')
-                os.system('cls')
-
-            case 4:
+                print('')
+                pausar()
+            case 0:
                 os.system('cls')
                 break
+
+def exibir_tela_estoque():
+    while True:
+        os.system('cls')
+        print("""----------Estoque---------
+Digite '1' para acrescentar no estoque
+Digite '2' para reduzir no estoque
+Digite '0' para voltar
+""")
+        try:
+            while True:
+                char = get_single_char()
+                if char.isdigit():
+                    escolha_do_usuario = int(char)
+                    break
+        except ValueError as erro:
+            print(erro)
+            continue
+
+        match escolha_do_usuario:
+
+            case 1:
+                try:
+                    isbn_livro = input('Digite o ISBN do livro que deseja acrescentar: ')
+
+                    service_livro = LivroServiceImpl()
+                    livro_VO = service_livro.consultar_livro(isbn_livro)
+
+                    print(f'Titulo: {livro_VO.titulo}')
+                    print('')
+
+                    quantidade = input('Digite a quantidade de livros que deseja adicionar: ')
+
+                    estoque_VO = EstoqueVO(livro_VO, quantidade)
+
+                    estoque_service = EstoqueServiceImpl()
+                    estoque_service.acrescentar_estoque(estoque_VO)
+
+                    print('Quantidade acrescentada com sucesso')
+
+                except ValueError as erro:
+                    print(erro)
+
+                except Exception as erro:
+                    print(f'Erro não identificado {erro}')
+                
+                print('')
+                pausar()
+
+            case 2:
+                try:
+                    isbn_livro = input('Digite o ISBN do livro que deseja reduzir: ')
+
+                    service_livro = LivroServiceImpl()
+                    livro_VO = service_livro.consultar_livro(isbn_livro)
+
+                    print(f'Titulo: {livro_VO.titulo}')
+                    print('')
+
+                    quantidade = input('Digite a quantidade de livros que deseja diminuir: ')
+
+                    estoque_VO = EstoqueVO(livro_VO, quantidade)
+
+                    estoque_service = EstoqueServiceImpl()
+                    estoque_service.reduzir_estoque(estoque_VO)
+
+                    print('Quantidade reduzida com sucesso')
+                
+                except ValueError as erro:
+                    print(erro)
+
+                except Exception as erro:
+                    print(f'Erro não identificado {erro}')
+
+                print('')
+                pausar()
+            case 0:
+                break
+
+                
 
 
 

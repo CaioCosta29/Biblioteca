@@ -22,14 +22,23 @@ class LivroServiceImpl:
         else:
             self.banco.realizarRollback()
             self.banco.fecharConexao()
-            raise Exception('Livro ja cadastrado')
+            raise ValueError('Livro ja cadastrado')
         
     def obter_livros(self):
         livros = self.livro_repositorio_banco.obter_livros()
         
         return livros
     
+    def consultar_livro(self, isbn):
+        livro_existe = self.livro_repositorio_banco.verificar_livro_existe(isbn)
 
+        if livro_existe == False:
+            raise ValueError('Livro não existe.')
+        else: 
+            livro = self.livro_repositorio_banco.consultar_livro(isbn)
+
+        return livro
+    
     def atualizar_livro(self, livro_VO):
 
         self.validar_dados(livro_VO)
@@ -43,7 +52,7 @@ class LivroServiceImpl:
         else:
             self.banco.realizarRollback()
             self.banco.fecharConexao()
-            raise Exception('Esse livro não existe')
+            raise ValueError('Esse livro não existe')
         
 
     def deletar_livro(self, isbn):
@@ -59,9 +68,9 @@ class LivroServiceImpl:
         else:
             self.banco.realizarRollback()
             self.banco.fecharConexao()
-            raise Exception('Livro não encontrado')
+            raise ValueError('Livro não encontrado')
 
-    def validar_dados(livro_VO):
+    def validar_dados(self, livro_VO):
 
         if len(livro_VO.isbn) != 13:
             raise ValueError('ISBN invalido!')

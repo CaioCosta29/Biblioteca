@@ -1,7 +1,6 @@
-from dominio.livroServico import LivroServico
 from dominio.livroVO import LivroVO
 
-class LivroRepositorioBanco(LivroServico):
+class LivroRepositorioBanco:
     
     def __init__(self, cursor):
         self.cursor = cursor
@@ -14,13 +13,16 @@ class LivroRepositorioBanco(LivroServico):
         self.cursor.execute(sql, valores)
             
     def consultar_livro(self, isbn):
-        sql = "SELECT * FROM livrotb WHERE isbn = %s"
+        sql = "SELECT ID_livro, isbn, titulo, autor, genero FROM livrotb WHERE isbn = %s"
         valores = (isbn,)
         
         self.cursor.execute(sql, valores)
         livro = self.cursor.fetchone()
 
-        return livro
+        if livro:
+            livro_VO = LivroVO(livro[1], livro[2], livro[3], livro[4], None ,livro[0])
+
+            return livro_VO
 
     def verificar_livro_existe(self, isbn):
         livro = self.consultar_livro(isbn)
@@ -32,7 +34,7 @@ class LivroRepositorioBanco(LivroServico):
         
 
     def obter_livros(self):
-        sql = "SELECT * from livrotb ORDER BY titulo"
+        sql = "SELECT isbn, titulo, autor, genero, IFNULL(quantidade, 0) FROM livrotb liv LEFT JOIN estoquetb est ON liv.ID_livro = est.ID_livro"
 
         self.cursor.execute(sql)
         livros = self.cursor.fetchall()
@@ -40,13 +42,10 @@ class LivroRepositorioBanco(LivroServico):
 
         if livros:
             for livro in livros:
-                livro_VO = LivroVO(livro[1], livro[2], livro[3], livro[4])
+                livro_VO = LivroVO(livro[0], livro[1], livro[2], livro[3], livro[4])
                 livros_retorno.append(livro_VO)
 
         return livros_retorno
-
-    def excluir_livro():
-        pass
 
     def atualizar_livro(self, livro_VO):
         sql = "UPDATE livrotb SET titulo = %s, autor = %s, genero = %s WHERE isbn = %s"

@@ -1,49 +1,51 @@
-from dominio.usuarioServico import UsuarioServico
+import bcrypt
 
-class UsuarioRepositorioBanco(UsuarioServico):
+class UsuarioRepositorioBanco:
 
     def __init__(self, cursor):
         self.cursor = cursor
     
-    def cadastrar_usuario():
-        pass
+    def cadastrar_usuario(self, usuario_VO):
+        sql = "INSERT INTO usuariotb (username, password) VALUES (%s, %s)"
+        valores = (usuario_VO.usuario, UsuarioRepositorioBanco.criptografar_senha(usuario_VO.senha))
 
-    def consultar_usuario(self, usuario):
-        sql = "SELECT username FROM usuariotb WHERE username = %s"
-        valores = (usuario,)
-        
         self.cursor.execute(sql, valores)
-
-        lista_usuario = self.cursor.fetchone()
-        
-        return lista_usuario
     
     def verificar_usuario_existe(self, usuario):
-        lista_usuario = self.consultar_usuarios(usuario)
+        lista_usuario = self.consultar_usuario(usuario)
 
-        if not lista_usuario:
-            return 'nao tem nada aqui'
+        if lista_usuario:
+            return True
         else:
-            return 'achei um usuario'
+            return False
         
-    def consultar_usuarios(self):
-        sql = 'SELECT username, password FROM usuariotb'
+    def consultar_usuario(self, usuario):
+        sql = 'SELECT username, password FROM usuariotb WHERE username = %s'
+        valores = (usuario,)
 
-        self.cursor.execute(sql)
+        self.cursor.execute(sql, valores)
 
-        lista_usuarios = self.cursor.fetchall()
+        lista_usuarios = self.cursor.fetchone()
 
         return lista_usuarios
         
     def autenticar_usuario(self, usuario, senha):
-        lista_usuarios = self.consultar_usuarios()
+        lista_usuario = self.consultar_usuario(usuario)
+        
+        if lista_usuario:
+            return UsuarioRepositorioBanco.verificar_senha(senha, lista_usuario[1])
+        else:   
+            return False
+        
+    def criptografar_senha(senha):
+        bytes = senha.encode('utf-8')
+        hashed = bcrypt.hashpw(bytes, bcrypt.gensalt(14))
+        return hashed
         
 
-        for conta in lista_usuarios:
-            if f'{usuario}, {senha}' in f'{conta[0]}, {conta[1]}':
-                return True
+    def verificar_senha(senha, hashed):
+        return bcrypt.checkpw(senha.encode('utf-8'), hashed.encode('utf-8'))
         
-        return False
         
 
 
