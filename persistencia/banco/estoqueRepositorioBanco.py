@@ -16,7 +16,7 @@ class EstoqueRepositorioBanco:
                 return False
 
     def verificar_livro_cadastrado_em_estoque(self, isbn):
-        sql = 'SELECT * FROM estoquetb RIGHT JOIN livrotb ON estoquetb.ID_livro = livrotb.ID_livro WHERE isbn = %s'
+        sql = 'SELECT * FROM estoquetb INNER JOIN livrotb ON estoquetb.ID_livro = livrotb.ID_livro WHERE isbn = %s'
         valores = (isbn,)
 
         self.cursor.execute(sql, valores)
@@ -65,6 +65,9 @@ class EstoqueRepositorioBanco:
         
         else:
             quantidade_em_estoque = self.obter_quantidade(estoque_VO.livro_VO.isbn)
+
+            if quantidade_em_estoque[0] - int(estoque_VO.quantidade) < 0:
+                raise ValueError('Erro ao tentar retirar mais livros do que possui')
 
             sql = 'UPDATE estoquetb SET quantidade = %s WHERE ID_livro = %s'
             

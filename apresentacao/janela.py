@@ -247,8 +247,10 @@ Digite '0' para voltar ao menu principal''')
                 livros = servico_livro.obter_livros()
 
                 if livros:
+                    print(f'{"ISBN".ljust(15)} | {"Titulo".ljust(40)} | {"Autor".ljust(40)} | {"Genêro".ljust(25)} | {"Estoque".rjust(9)}')
+                    print('-' * 141)
                     for livro in livros:
-                        print(f'ISBN: {livro.isbn.ljust(15)} | Titulo: {livro.titulo.ljust(25)} | Autor: {livro.autor.ljust(25)} | Gênero: {livro.genero.ljust(20)} | Estoque: {str(livro.quantidade).ljust(15)}')
+                        print(f'{livro.isbn.ljust(15)} | {livro.titulo.ljust(40)} | {livro.autor.ljust(40)} | {livro.genero.ljust(25)} | {str(livro.quantidade).rjust(9)}')
                 else:
                     os.system('cls')
                     print('Não existe nenhum livro cadastrado')
@@ -479,6 +481,7 @@ Digite '0' para voltar
                     livro_VO = service_livro.consultar_livro(isbn_livro)
 
                     print(f'Titulo: {livro_VO.titulo}')
+                    print(f'Quantidade em estoque: {livro_VO.quantidade}')
                     print('')
 
                     quantidade = input('Digite a quantidade de livros que deseja adicionar: ')
@@ -507,6 +510,7 @@ Digite '0' para voltar
                     livro_VO = service_livro.consultar_livro(isbn_livro)
 
                     print(f'Titulo: {livro_VO.titulo}')
+                    print(f'Quantidade em estoque: {livro_VO.quantidade}')
                     print('')
 
                     quantidade = input('Digite a quantidade de livros que deseja diminuir: ')

@@ -23,12 +23,8 @@ class EstoqueServiceImpl:
         if int(estoque_VO.quantidade) < 1:
             raise ValueError('Digite valores maiores que 0')
         
-        quantidade_em_estoque = self.estoque_repositorio_banco.obter_quantidade(estoque_VO.livro_VO.isbn)
-
-        if quantidade_em_estoque[0] - int(estoque_VO.quantidade) < 0:
-            raise ValueError('Erro ao tentar retirar mais livros do que possui')
-        else:
-            self.estoque_repositorio_banco.reduzir_estoque(estoque_VO)
-            self.banco.realizarCommit()
-            self.banco.fecharConexao()
+        
+        self.estoque_repositorio_banco.reduzir_estoque(estoque_VO)
+        self.banco.realizarCommit()
+        self.banco.fecharConexao()
 

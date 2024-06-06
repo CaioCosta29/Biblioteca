@@ -16,7 +16,7 @@ class LeitorRepositorioBanco(LeitorRepositorio):
             raise Exception('Erro ao incluir um registro no Banco.')
 
     def consultar_leitor(self, cpf):
-        sql = '''SELECT * FROM leitortb where cpf = %s'''
+        sql = 'SELECT * FROM leitortb where cpf = %s'
         valores = (cpf,)
 
         self.cursor.execute(sql, valores)

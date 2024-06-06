@@ -13,14 +13,14 @@ class LivroRepositorioBanco:
         self.cursor.execute(sql, valores)
             
     def consultar_livro(self, isbn):
-        sql = "SELECT ID_livro, isbn, titulo, autor, genero FROM livrotb WHERE isbn = %s"
+        sql = "SELECT liv.ID_livro, isbn, titulo, autor, genero, IFNULL(quantidade, 0) as quantidade FROM livrotb liv LEFT JOIN estoquetb est ON liv.ID_livro = est.ID_livro WHERE isbn = %s"
         valores = (isbn,)
         
         self.cursor.execute(sql, valores)
         livro = self.cursor.fetchone()
 
         if livro:
-            livro_VO = LivroVO(livro[1], livro[2], livro[3], livro[4], None ,livro[0])
+            livro_VO = LivroVO(livro[1], livro[2], livro[3], livro[4], livro[5] ,livro[0])
 
             return livro_VO
 
